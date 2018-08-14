@@ -3,10 +3,10 @@
 # Shell script functions to help automate git repository state replication to a local checked out workspace.
 
 # The location to the git repository to clone.
-REPO="git@github.com:fuze/cga-audiocodes.git"
+REPO="git@github.com:YOUR_ACCOUNT/GITPROJECT.git"
 
 # The folder where we want to have the checkout of the git repository.
-WORKSPACE="/tmp/cga-audiocodes";
+WORKSPACE="/tmp/meow";
 
 # The ssh key to use for accessing the remote git repository.
 KEY="${HOME}/.ssh/YOUR.key"

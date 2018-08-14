@@ -8,9 +8,9 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 # Working space and credentials
-svn_wk='/var/www/bos-cga-fc1.thinkingphones.com/audiocodes'
-svn_user='root'
-svn_passwd='kn1cker5'
+svn_wk='/tmp/workspace/that_one'
+svn_user='cat'
+svn_passwd='meow'
 
 # Defining the time parameters and the SVN app directory
 date=`/bin/date +"%F %T"`
