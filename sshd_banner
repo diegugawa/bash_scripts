@@ -1,0 +1,18 @@
+*********************************************************************************************
+*				HELLO TEAM!!						    *
+*	Please do NOT make changes to AudioCodes files in this server.			    *
+*											    *
+*	All INI configuration files are being stored in Subversion under the path:	    *
+*	svn://svn.tpn.thinkingphones.net/phone-config/trunk/audiocodes/ini		    *
+*											    *
+*	The server "vap-eng2.tpn.thinkingphones.net" already has this folder checkout	    *
+*	under the path: /opt/phone-config/trunk/audiocodes/ini/				    *
+*	SSH into that server and follow the steps under the wiki page:			    *
+*	https://wiki.tpn.thinkingphones.net/display/HELP/How+to+Support+AudioCodes+units    *
+*	---> Section: "Editing AudioCodes Config Files for custom parameters"		    *
+*											    *
+*	Wait 10 minutes for your changes to take effect. Thank you!!!			    *
+*********************************************************************************************
+
+
+
