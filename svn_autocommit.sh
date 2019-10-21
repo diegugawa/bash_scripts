@@ -1,50 +1,60 @@
-#!/bin/bash
+#!/bin/env bash
+
+# Working space and credentials
+svn_wk='/tmp/svn_workspace'
+svn_user='foo'
+svn_passwd='bar'
+
+# Defining the time parameters and the SVN app directory
+date=$( /bin/date '+%Y-%m-%d %H:%M:%S' )
+SVN='/usr/bin/svn'
+stat="${SVN} status -u"
+svn_log='/var/log/svn-autocommit.log'
+
+delete_files=$(${stat}|grep '^\!'|sed 's/\! / /g')
+add_files=$(${stat}|grep '^\?'|sed 's/\? / /g')
+modify_files=$(${stat}|grep '^\*'|sed 's/\* / /g')
+
+# Start in the SVN directory first
+cd $svn_wk || exit
 
 # Check first if the script is being run as root
 if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root"
-   echo "Run the following command then 'chmod u+x svn_autocommit.sh'"
+   echo "Run the following command 'chmod 0644 svn_autocommit.sh'"
    exit 1
 fi
 
-# Working space and credentials
-svn_wk='/tmp/workspace/that_one'
-svn_user='cat'
-svn_passwd='meow'
-
-# Defining the time parameters and the SVN app directory
-date=`/bin/date +"%F %T"`
-svn='/usr/bin/svn'
-
 # Check the status of the folder, delete, add, update and finally commit again
-script_path=`dirname $(readlink -f $0)`
-cd $svn_wk
 
-#run svn update first
-svn_log='/var/log/svn-autocommit.log'
+# Are there any files to delete?
+if [[ $stat != '' ]]; then
+      if [[ $delete_files != '' ]]; then
+        for file in $delete_files; do
+          "${SVN} delete $file >> $svn_log"
+        done
+      fi
 
-# time to begin this...
+# Are there any files to add?
+if [[ $add_files != '' ]]; then
+  for file in $add_files; do
+    "${SVN} add $file >> $svn_log"
+  done
+fi
 
-stat=`svn status`
+# Do an update again
+$SVN update --username $svn_user --password $svn_passwd --non-interactive >> $svn_log
+# Finaly commit
+$SVN commit -m "$date - Automatic commits" --username $svn_user --password $svn_passwd --non-interactive >> $svn_log
+# Print when this was updated        
+ echo "Repository updated on $date" >> $svn_log
+fi
 
 if [[ $stat != '' ]]; then
-        # Are there any files to delete?
-        delete_files=`echo $stat|grep '^\!'|sed 's/\! / /g'`
-        if [[ $delete_files != '' ]]; then
-                for file in $delete_files; do
-                        svn delete $file >> $svn_log
-                done
-        fi
-
-        # Are there any files to add?
-        add_files=`echo $stat|grep '^\?'|sed 's/\? / /g'`
-        if [[ $add_files != '' ]]; then
-                for file in $add_files; do
-                        svn add $file >> $svn_log
-                done
-        fi
-        # Do an update again
-        $svn update --username $svn_user --password $svn_passwd --non-interactive >> $svn_log
-        # Finaly commit
-        $svn commit -m "$date - Automatic commits" --username $svn_user --password $svn_passwd --non-interactive >> $svn_log
+  # Are there any files to modify?
+  if [[ $modify_files != '' ]]; then
+    for file in $modify_files; do
+      ${SVN} up $file >> $svn_log
+    done
+  fi
 fi
